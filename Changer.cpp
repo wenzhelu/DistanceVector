@@ -1,7 +1,7 @@
 
-#include "updateChanger.h"
+#include "Changer.h"
 
-void updateChanger::update()
+void Changer::updateChanger()
 {
 	// through UDP to get recBuffer
 	bool changeFlag = false;
@@ -45,4 +45,31 @@ void updateChanger::update()
 	}
 	rTableLoco.unlock();
 
+}
+
+void Changer::periodicChanger()
+{
+	//how to use timer
+	rTableLock.lock();
+	uint passTime;
+	uint cost;
+	uint newTTL;
+	for(auto it = rTable.begin();it!=rTable.end();it++)
+	{
+		newTTL = *it.ttl - passTime;
+		cost = *it.cost;
+		if(cost != 0)
+		{
+			if(newTTL <= 0)
+			{
+				
+			}
+			else
+			{
+				*it.ttl = newTTL;
+			}
+		}
+	}			
+	//call something to send 
+	rTableLock.unlock();
 }
