@@ -11,22 +11,27 @@
 
 #include "DV.h"
 
+typedef struct sockaddr_in addr;
+
 class UDPSock {
 private:
-    DV *dv
+    DV *dv;
     int socket_fd;
+    
+    addr local;
+    vector<addr> remotes;
     
     // can add socket options later
     
 public:
     UDPSock(DV *d);
     
-//    int init(const char *localPort, const char *remoteIp, const char *remotePort);
+    int init();
     
     // proxy functions
-    read();
+    void read();
     
-    write();
+    void write();
     
     // print received packet for debugging usage
     

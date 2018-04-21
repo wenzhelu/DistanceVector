@@ -6,8 +6,6 @@
 #ifndef DV_h
 #define DV_h
 
-using namespace std;
-
 // forward declarations for class DV
 class UDPSock;
 class PUpdater;
@@ -30,6 +28,12 @@ class RouteTableEntry {
     ushort ttl;
 };
 
+using std::vector;
+using std::unordered_map;
+using std::thread;
+using std::mutex;
+using std::string;
+
 // class Distance Vector
 // store routing table/ routing graph / mutex / UDP socket / Periodic & triggered updater
 class DV {
@@ -46,7 +50,7 @@ public:
     
 //    vector<vector<uint>> graph;     // graph
     unordered_map<uint, RouteTableEntry> rTable; // routing table;
-    vector<uint> neighbors;
+//    vector<uint> neighbors;
     
     bool poison;    // true if use poison reverse
     

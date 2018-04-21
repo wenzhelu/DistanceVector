@@ -8,8 +8,28 @@
 
 #include "include/UDPSock.h"
 
-UDPSock::UDPSock(DV *d) : dv(d) {
-    // set up socket
-    // bind socket to certain 
+UDPSock::UDPSock(DV *d) : dv(d) {}
+
+int UDPSock::init() {
+    if ((socket_fd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0) {
+        printf("socket setup error\n");
+        return -1;
+    }
+    
+    local.sin_addr.s_addr = INADDR_ANY;
+    local.sin_family = AF_INET;
+    local.sin_port = htons(dv->port);
+    if (bind(socket_fd, (struct sockaddr *) &local, sizeof(local)) < 0) {
+        printf("server binding error\n");
+        return -1;
+    }
+    
+    // remotes are assigned in DV's init function
+    
+//    remote.sin_addr.s_addr = inet_addr(remoteIp);
+//    remote.sin_family = AF_INET;
+//    remote.sin_port = htons(atoi(remotePort));
+    
+    return 0;
 }
 
