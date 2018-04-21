@@ -34,6 +34,7 @@ using std::thread;
 using std::mutex;
 using std::string;
 
+
 // class Distance Vector
 // store routing table/ routing graph / mutex / UDP socket / Periodic & triggered updater
 class DV {
@@ -50,17 +51,17 @@ public:
     
 //    vector<vector<uint>> graph;     // graph
     unordered_map<uint, RouteTableEntry> rTable; // routing table;
-//    vector<uint> neighbors;
     
     bool poison;    // true if use poison reverse
     
     // notice that both ttl and period is in seconds
-    int ttl;
-    int period;
-    int port;
+    uint ttl;
+    uint period;
+    uint port;
     
     char *readBuff;
     char *sendBuff;
+    uint buffLen;
     
     DV() {}
     

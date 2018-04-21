@@ -19,11 +19,11 @@ private:
     int socket_fd;
     
     addr local;
-    vector<addr> remotes;
-    
     // can add socket options later
     
 public:
+    vector<addr> remotes;
+    
     UDPSock(DV *d);
     
     int init();

@@ -7,6 +7,10 @@
 //
 
 #include "include/UDPSock.h"
+#include <iostream>
+
+using std::cout;
+using std::endl;
 
 UDPSock::UDPSock(DV *d) : dv(d) {}
 
@@ -31,5 +35,21 @@ int UDPSock::init() {
 //    remote.sin_port = htons(atoi(remotePort));
     
     return 0;
+}
+
+// send routing table information to neighbors
+void UDPSock::write() {
+    for (auto& remote : remotes) {
+        size_t written = sendto(socket_fd, dv->sendBuff, dv->buffLen, 0, (struct sockaddr *)&remote, sizeof(remote));
+        if (written != dv->buffLen) {
+            cout << "write socket error" << endl;
+        }
+    }
+}
+
+void UDPSock::read() {
+    if (recvfrom(socket_fd, dv->readBuff, dv->buffLen, 0, nullptr, 0) != dv->buffLen) {
+        cout << "read socket error" << endl;
+    }
 }
 
