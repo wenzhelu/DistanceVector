@@ -13,23 +13,22 @@
 
 class UDPSock {
 private:
+    DV *dv
     int socket_fd;
     
     // can add socket options later
     
 public:
-    UDPSock();
+    UDPSock(DV *d);
     
-    int init(const char *localPort, const char *remoteIp, const char *remotePort);
+//    int init(const char *localPort, const char *remoteIp, const char *remotePort);
     
     // proxy functions
     read();
     
     write();
     
-    void printPacket(bool, char*, uint);
-    
-    void closeSock();
+    // print received packet for debugging usage
     
     ~UDPSock();
 };

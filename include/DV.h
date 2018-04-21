@@ -16,17 +16,16 @@ class TUpdater;
 #include <cstddef>
 #include <thread>
 #include <mutex>
+#include <unordered_map>
 #include <vector>
 #include <arpa/inet.h>
 #include <netinet/in.h>
 
 typedef unsigned int uint;
 typedef unsigned short ushort;
-typedef struct sockaddr_in addr;
 
 class RouteTableEntry {
-    addr dest;
-    addr next;
+    uint next;
     uint cost;
     ushort ttl;
 };
@@ -46,16 +45,26 @@ public:
     mutex mut;      // mutex to synchronize two updaters
     
 //    vector<vector<uint>> graph;     // graph
-    vector<RouteTableEntry> rTable; // routing table;
+    unordered_map<uint, RouteTableEntry> rTable; // routing table;
+    vector<uint> neighbors;
     
     bool poison;    // true if use poison reverse
+    
     // notice that both ttl and period is in seconds
     int ttl;
     int period;
+    int port;
+    
+    char *readBuff;
+    char *sendBuff;
     
     DV() {}
     
     DV(string config, string port, string poison, string TTL, string prd);
+    
+    void printReadBuff();
+    
+    void printSendBuff();
     
     void init(string config, string port, string poison);
     
