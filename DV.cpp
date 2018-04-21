@@ -7,6 +7,7 @@
 //
 
 #include "include/DV.h"
+#include "include/UDPSock.h"
 #include <string>
 
 DV::DV(string config, string port, string poison, string TTL, string prd) {
@@ -18,4 +19,12 @@ void DV::init(string config, string port, string poi) {
     // init routing table from config and port
     
     this->poison = poi.compare("true") == 0;
+}
+
+DV::~DV() {
+    delete tp;
+    delete tt;
+    delete usock;
+    delete pu;
+    delete tu;
 }

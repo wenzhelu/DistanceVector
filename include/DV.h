@@ -58,11 +58,13 @@ public:
     uint ttl;
     uint period;
     uint port;
-    
+    uint ifinity;
+
     char *readBuff;
     char *sendBuff;
     uint buffLen;
     
+
     DV() {}
     
     DV(string config, string port, string poison, string TTL, string prd);
@@ -73,13 +75,7 @@ public:
     
     void init(string config, string port, string poison);
     
-    ~DV() {
-        delete tp;
-        delete tt;
-        delete usock;
-        delete pu;
-        delete tu;
-    }
+    ~DV();
 };
 
 
