@@ -8,6 +8,7 @@
 
 #include "include/UDPSock.h"
 #include <iostream>
+#include <unistd.h>
 
 using std::cout;
 using std::endl;
@@ -51,5 +52,9 @@ void UDPSock::read() {
     if (recvfrom(socket_fd, dv->readBuff, dv->buffLen, 0, nullptr, 0) != dv->buffLen) {
         cout << "read socket error" << endl;
     }
+}
+
+UDPSock::~UDPSock() {
+    close(socket_fd);
 }
 
