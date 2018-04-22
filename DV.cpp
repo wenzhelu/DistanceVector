@@ -80,7 +80,7 @@ void DV::init(string config, string port, string TTL, string infinity, string pr
             line.cost = this->ifinity;
             line.next = 0;        // 0 for NULL next router
         }
-        cout << "IP: " << DV::uintToIP(dest) << ", cost: " << line.next << endl;
+        cout << "IP: " << DV::uintToIP(dest) << ", cost: " << line.cost << endl;
 
         
         rTable.insert({ dest, line });
@@ -91,6 +91,8 @@ void DV::init(string config, string port, string TTL, string infinity, string pr
     this->vs = (uint) rTable.size();
 
     buffLen = 8 * this->vs; // each vertex in the network will need 8 byte to communicate infos
+    this->sendBuff = new char[buffLen];
+    this->readBuff = new char[buffLen];
 }
 
 void DV::printReadBuff() {
