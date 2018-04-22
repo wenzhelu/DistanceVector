@@ -61,11 +61,11 @@ void Changer::updateChange()
             cout << "IP: " << DV::uintToIP(addr) << ", cost: " << cost << endl;
             RouteTableEntry& p = dv->rTable[addr];
             originalCost = p.cost;
-            if (originalCost <= cost + distance)
+            if (originalCost >= cost + distance)
             {
                 p.ttl = dv->ttl;
                 p.next = sendHost;
-                if (originalCost < cost + distance) {
+                if (originalCost > cost + distance) {
                     p.cost = cost + distance;
                     changeFlag = true;
                 }
