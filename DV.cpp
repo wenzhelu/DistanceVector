@@ -10,6 +10,7 @@
 #include "include/UDPSock.h"
 #include "include/Changer.h"
 #include <fcntl.h>
+#include <string.h>
 #include <string>
 #include <vector>
 #include <iostream>
