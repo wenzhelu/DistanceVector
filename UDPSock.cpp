@@ -49,8 +49,10 @@ void UDPSock::write() {
 }
 
 void UDPSock::read() {
-    if (recvfrom(socket_fd, dv->readBuff, dv->buffLen, 0, nullptr, 0) != dv->buffLen) {
+    int read = recvfrom(socket_fd, dv->readBuff, dv->buffLen, 0, nullptr, 0);
+    if (read != dv->buffLen) {
         cout << "read socket error" << endl;
+        cout << read << endl;
     }
 }
 
