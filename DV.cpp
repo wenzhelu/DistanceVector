@@ -37,6 +37,13 @@ void DV::init(string config, string port, string TTL, string infinity, string pr
         printf("config file not found\n");
         exit(1);
     }
+    
+    fscanf(fp, "%s %s\n", address, cost);
+    RouteTableEntry tm;
+    tm.cost = 0;
+    tm.next = inet_addr(address);
+    tm.ttl = ttl;
+    rTable.insert({ tm.next, tm });
     //for each line, addr is the address and cost
     while (fscanf(fp, "%s %s\n", address, cost) != EOF)
     {
@@ -68,8 +75,8 @@ void DV::init(string config, string port, string TTL, string infinity, string pr
         memset(address, 0, 20);
         memset(cost, 0, 4);
     }
-    // add local ip and set total size
-    //    tTable.insert({})
+    
+    this->vs = (uint) rTable.size();
 
     buffLen = 8 * this->vs; // each vertex in the network will need 8 byte to communicate infos
 }
