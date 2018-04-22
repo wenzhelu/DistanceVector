@@ -32,26 +32,28 @@ void Changer::updateChange()
         uint cost;
         uint originalCost;
         uint distance;
+ 	uint sendHost;
         int readBufferP = 0;
         int maxRouters = dv->rTable.size();
         
         dv->rTableLock.lock();
         //loop to find the source host
-        while (readBufferP < maxRouters)
+        while (readBufferP/2 < maxRouters)
         {
             addr = *((uint*)(dv->readBuff) + readBufferP);   // first 4 bytes
             cost = *((uint*)(dv->readBuff) + readBufferP + 1);   //second 4 bytes
             if (cost == 0)
             {
                 distance = dv->rTable.at(addr).cost;
+		sendHost = addr;
                 break;
             }
             readBufferP += 2;
         }
         
         //loop to update
-        
-        while (readBufferP < maxRouters)    // Notice this condition is wrong!
+       readBufferP = 0; 
+        while (readBufferP/2 < maxRouters)    // Notice this condition is wrong!
         {
             addr = *((uint*)(dv->readBuff) + readBufferP);   // first 4 bytes
             cost = *((uint*)(dv->readBuff) + readBufferP + 1);   //second 4 bytes
@@ -59,6 +61,8 @@ void Changer::updateChange()
             if (originalCost < cost + distance)
             {
                 dv->rTable.at(addr).cost = cost + distance;
+		dv->rTable.at(addr).ttl = dv->ttl;
+		dv->rTable.at(addr).next = sendHost;
                 changeFlag = true;
             }
             readBufferP += 2;
@@ -67,10 +71,13 @@ void Changer::updateChange()
         if (changeFlag) {
             // read routing table into send buffer then send
             uint *tm = (uint*) dv->sendBuff;
+	    printf("update rTable by changing:\n");
             for (auto& p : dv->rTable) {
                 *tm++ = p.first;
                 *tm++ = p.second.cost;
-            }
+		printf("next: %s\t cost:%u\t TTL:%u\t\n",dv->uintToIP(p.second.next),p.second.cost,p.second.ttl);
+	    }
+	    printf("rTable updating ends\n");
             dv->usock->write();
         }
         cout << "=========================INCOMING PACKET ENDS=======================\n" << endl;
