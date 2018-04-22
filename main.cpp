@@ -4,8 +4,12 @@
 //
 
 #include <iostream>
+#include <thread>
 #include "include/DV.h"
 #include "include/UDPSock.h"
+#include "include/Changer.h"
+
+using std::thread;
 
 int main(int argc, const char * argv[]) {
 
@@ -19,15 +23,17 @@ int main(int argc, const char * argv[]) {
     DV dv;
     dv.usock = new UDPSock(&dv);
     
+    // set up parameters
     dv.init(argv[1], argv[2], argv[3], argv[4], argv[5], argv[6]);
 
-    // make two updater and spawn 2 threads
+    // make two updaters and spawn 2 threads
+    dv.pc = new Changer(&dv);
     
-    // TODO: Changer or updater?
-    // periodic updater should print routing table
-    // while loop for two updater
+    dv.tt = new thread(&Changer::updateChange, dv.pc);
+    dv.tp = new thread(&Changer::periodicChange, dv.pc);
     
-    dv.tt->join();
+    // wait for them
+    dv.tp->join();
     dv.tt->join();
     
 	return 0;

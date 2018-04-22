@@ -6,19 +6,18 @@
 //  Copyright © 2018年 Wenzhe Lu. All rights reserved.
 //
 
-// for local ip addr
-#include <sys/types.h>
-#include <ifaddrs.h>
-
 #include "include/DV.h"
 #include "include/UDPSock.h"
+#include "include/Changer.h"
 #include <fcntl.h>
 #include <string>
 #include <vector>
+#include <iostream>
 
 using std::stol;
 using std::stoi;
-
+using std::cout;
+using std::endl;
 
 // constructors for DV
 void DV::init(string config, string port, string TTL, string infinity, string prd, string poi) {
@@ -70,13 +69,30 @@ void DV::init(string config, string port, string TTL, string infinity, string pr
         memset(cost, 0, 4);
     }
     // add local ip and set total size
-//    tTable.insert({})
+    //    tTable.insert({})
+
+    buffLen = 8 * this->vs; // each vertex in the network will need 8 byte to communicate infos
+}
+
+void DV::printReadBuff() {
+    
+}
+
+void DV::printSendBuff() {
+    // not implement yet
+}
+
+// print the routing table
+void DV::printRTable() {
+    for (auto& p : this->rTable) {
+        cout << "dest: " << p.first << ", next: " << p.second.next << ", cost: " << p.second.cost
+        << ", ttl: " << p.second.ttl << endl;
+    }
 }
 
 DV::~DV() {
     delete tp;
     delete tt;
     delete usock;
-    delete pu;
-    delete tu;
+    delete pc;
 }

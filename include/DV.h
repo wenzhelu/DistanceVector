@@ -8,8 +8,7 @@
 
 // forward declarations for class DV
 class UDPSock;
-class PUpdater;
-class TUpdater;
+class Changer;
 
 #include <cstddef>
 #include <thread>
@@ -40,8 +39,7 @@ using std::string;
 class DV {
 public:
     // components
-    PUpdater *pu;
-    TUpdater *tu;
+    Changer *pc;
     UDPSock *usock;
     
     thread *tp;     // thread for periodic updater
@@ -72,9 +70,17 @@ public:
     
     void printSendBuff();
     
+    void printRTable();
+    
     void init(string config, string port, string TTL, string infinity, string prd, string poi);
     
     ~DV();
+    
+    static char *uintToIP(uint i) {
+        struct in_addr tm;
+        tm.s_addr = i;
+        return inet_ntoa(tm);
+    }
 };
 
 
