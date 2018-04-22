@@ -61,6 +61,7 @@ void Changer::updateChange()
             cout << "IP: " << DV::uintToIP(addr) << ", cost: " << cost << endl;
             RouteTableEntry& p = dv->rTable[addr];
             originalCost = p.cost;
+            
             if (originalCost >= cost + distance)
             {
                 p.ttl = dv->ttl;
@@ -74,12 +75,6 @@ void Changer::updateChange()
         }
         
         if (changeFlag) {
-            // read routing table into send buffer then send
-            uint *tm = (uint*) dv->sendBuff;
-            for (auto& p : dv->rTable) {
-                *tm++ = p.first;
-                *tm++ = p.second.cost;
-            }
             dv->usock->write();
         }
         cout << "=========================INCOMING PACKET ENDS=======================\n" << endl;
@@ -93,8 +88,8 @@ void Changer::periodicChange() {
         dv->rTableLock.lock();
         cout << "=======================ROUTING TABLE==========================" << endl;
 
-        uint *tm = (uint*) dv->sendBuff;
         for(auto it = dv->rTable.begin(); it != dv->rTable.end(); it++) {
+            cout << "dest: " << DV::uintToIP(it->first) << ", next: " <<  DV::uintToIP(it->second.next) << ", cost: " << it->second.cost << ", ttl: " << it->second.ttl << endl;
             if (it->second.cost != 0) {
                 if (it->second.ttl <= dv->period) {
                     it->second.ttl = 0;
@@ -103,11 +98,6 @@ void Changer::periodicChange() {
                     it->second.ttl -= dv->period;
                 }
             }
-            *tm++ = it->first;
-            *tm++ = it->second.cost;
-            // print out routing table in periodic update
-            cout << "dest: " << DV::uintToIP(it->first) << ", next: " <<  DV::uintToIP(it->second.next) << ", cost: " << it->second.cost << ", ttl: " << it->second.ttl << endl;
-
         }
         
         cout << "====================ROUTING TABLE ENDS=======================\n" << endl;

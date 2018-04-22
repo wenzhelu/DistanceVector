@@ -40,11 +40,29 @@ int UDPSock::init() {
 
 // send routing table information to neighbors
 void UDPSock::write() {
-    for (auto& remote : remotes) {
-//        cout << "Sending to IP: " << DV::uintToIP(remote.sin_addr.s_addr) << endl;
-        size_t written = sendto(socket_fd, dv->sendBuff, dv->buffLen, 0, (struct sockaddr *)&remote, sizeof(remote));
-        if (written != dv->buffLen) {
-            cout << "write socket error" << endl;
+    uint *tm = (uint*) dv->sendBuff;
+    if (dv->poison) {
+        for (auto& remote : remotes) {
+            for (auto& p : dv->rTable) {
+                *tm++ = p.first;
+                *tm++ = p.second.next == remote.sin_addr.s_addr ? dv->ifinity : p.second.cost;
+            }
+            size_t written = sendto(socket_fd, dv->sendBuff, dv->buffLen, 0, (struct sockaddr *)&remote, sizeof(remote));
+            if (written != dv->buffLen) {
+                cout << "write socket error" << endl;
+            }
+        }
+    } else {
+        for (auto& p : dv->rTable) {
+            *tm++ = p.first;
+            *tm++ = p.second.cost;
+        }
+        for (auto& remote : remotes) {
+            //        cout << "Sending to IP: " << DV::uintToIP(remote.sin_addr.s_addr) << endl;
+            size_t written = sendto(socket_fd, dv->sendBuff, dv->buffLen, 0, (struct sockaddr *)&remote, sizeof(remote));
+            if (written != dv->buffLen) {
+                cout << "write socket error" << endl;
+            }
         }
     }
 }
