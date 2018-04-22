@@ -43,7 +43,7 @@ void Changer::updateChange()
             cost = *((uint*)(dv->readBuff) + readBufferP + 1);   //second 4 bytes
             if (cost == 0)
             {
-                distance = dv->rTable.at(addr).cost;
+                distance = dv->rTable.at(addr).cost = 1;
                 sendHost = addr;
                 break;
             }
