@@ -5,43 +5,25 @@
 
 #include <iostream>
 #include "include/DV.h"
+#include "include/UDPSock.h"
+
+#include <sys/types.h>
+#include <ifaddrs.h>
 
 int main(int argc, const char * argv[]) {
-    
-	int argCount = 7;
 
-	char config[40];  //length of file name should be less than 40 bytes
-	FILE * fp;
-	int portNumber;
-	int TTL;
-	int inf;
-	int period;   // period seconds
-	bool reverse; // input should  be true or false
-
-	if (argc != argCount)
-	{
-		printf("Usage:config, portnumber, TTL, infinity, Period, Poison Reverse\n");
+	if (argc != 7) {
+		printf("Usage:./dv config_file portnumber TTL infinity Period Poison_Reverse(true or false)\n");
 		exit(1);
 	}
-	else
-	{
-		// initial parameters
-		int index = 0;
-		while (argv[1][index] != '\0')
-		{
-			config[index] = argv[1][index];
-			index++;
-		}
-		config[index] = '\0';
-		fp = fopen(config, O_RDONLY);
 
-		portNumber = atoi(argv[2]);
-		TTL = atoi(argv[3]);
-		inf = atoi(argv[4]);
-		period = atoi(argv[5]);
-		reverse = *argv[6] == 't' ? true : false;
+    // initial parameters
+        
+    DV dv;
+    dv.usock = new UDPSock(&dv);
+    
+    dv.init(argv[1], argv[2], argv[3], argv[4], argv[5], argv[6]);
 
-		//call some functions
-	}
+    
 	return 0;
 }

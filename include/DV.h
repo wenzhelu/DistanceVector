@@ -20,12 +20,12 @@ class TUpdater;
 #include <netinet/in.h>
 
 typedef unsigned int uint;
-typedef unsigned short ushort;
 
 class RouteTableEntry {
+public:
     uint next;
     uint cost;
-    ushort ttl;
+    uint ttl;
 };
 
 using std::vector;
@@ -47,7 +47,7 @@ public:
     thread *tp;     // thread for periodic updater
     thread *tt;     // thread for triggered updater
     
-    mutex mut;      // mutex to synchronize two updaters
+    mutex rTableLock;      // mutex to synchronize two updaters
     
 //    vector<vector<uint>> graph;     // graph
     unordered_map<uint, RouteTableEntry> rTable; // routing table;
@@ -59,6 +59,7 @@ public:
     uint period;
     uint port;
     uint ifinity;
+    uint vs;
 
     char *readBuff;
     char *sendBuff;
@@ -67,13 +68,11 @@ public:
 
     DV() {}
     
-    DV(string config, string port, string poison, string TTL, string prd);
-    
     void printReadBuff();
     
     void printSendBuff();
     
-    void init(string config, string port, string poison);
+    void init(string config, string port, string TTL, string infinity, string prd, string poi);
     
     ~DV();
 };
