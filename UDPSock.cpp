@@ -53,6 +53,7 @@ void UDPSock::read() {
     if (read != dv->buffLen) {
         cout << "read socket error" << endl;
         cout << read << endl;
+        cout << errno << endl;
     }
 }
 
