@@ -41,7 +41,7 @@ int UDPSock::init() {
 // send routing table information to neighbors
 void UDPSock::write() {
     for (auto& remote : remotes) {
-        cout << remote.
+        cout << "Sending to IP: " << DV::uintToIP(remote.sin_addr.s_addr) << endl;
         size_t written = sendto(socket_fd, dv->sendBuff, dv->buffLen, 0, (struct sockaddr *)&remote, sizeof(remote));
         if (written != dv->buffLen) {
             cout << "write socket error" << endl;
