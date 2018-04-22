@@ -21,6 +21,7 @@ void Changer::updateChange()
     // TODO:
     // 1. bugfix
     // 2. print receive info when triggered.
+    // 3. update TTL 
     
     while (1) {
         dv->usock->read();
