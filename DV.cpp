@@ -24,7 +24,8 @@ using std::endl;
 void DV::init(string config, string port, string TTL, string infinity, string prd, string poi) {
     // init routing table from config and port
     // init routing table from config and port
-    this->port = stoi(port);
+    this->port = htons(stoi(port));
+    cout << stoi(port) << ", after change: " << this->port << endl;
     this->poison = (poi.compare("true") == 0);
     this->ttl = (uint) stoi(TTL);
     this->ifinity = (uint) stol(infinity);
