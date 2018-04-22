@@ -25,6 +25,8 @@ int main(int argc, const char * argv[]) {
     
     // set up parameters
     dv.init(argv[1], argv[2], argv[3], argv[4], argv[5], argv[6]);
+    
+    dv.usock->init();
 
     // make two updaters and spawn 2 threads
     dv.pc = new Changer(&dv);
