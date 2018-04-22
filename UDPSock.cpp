@@ -43,9 +43,10 @@ void UDPSock::write() {
     uint *tm = (uint*) dv->sendBuff;
     if (dv->poison) {
         for (auto& remote : remotes) {
+            tm = (uint*) dv->sendBuff;
             for (auto& p : dv->rTable) {
                 *tm++ = p.first;
-                *tm++ = p.second.next == remote.sin_addr.s_addr ? dv->ifinity : p.second.cost;
+                *tm++ = (p.second.next == remote.sin_addr.s_addr ? dv->ifinity : p.second.cost);
             }
             size_t written = sendto(socket_fd, dv->sendBuff, dv->buffLen, 0, (struct sockaddr *)&remote, sizeof(remote));
             if (written != dv->buffLen) {
