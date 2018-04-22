@@ -23,7 +23,7 @@ int UDPSock::init() {
     
     local.sin_addr.s_addr = INADDR_ANY;
     local.sin_family = AF_INET;
-    local.sin_port = htons(dv->port);
+    local.sin_port = dv->port;
     if (bind(socket_fd, (struct sockaddr *) &local, sizeof(local)) < 0) {
         printf("server binding error\n");
         return -1;
@@ -53,8 +53,8 @@ void UDPSock::read() {
     int read = recvfrom(socket_fd, dv->readBuff, dv->buffLen, 0, nullptr, 0);
     if (read != dv->buffLen) {
         cout << "read socket error" << endl;
-        cout << read << endl;
-        cout << errno << endl;
+//        cout << read << endl;
+//        cout << errno << endl;
     }
 }
 
