@@ -58,14 +58,17 @@ void Changer::updateChange()
         {
             addr = *((uint*)(dv->readBuff) + readBufferP);   // first 4 bytes
             cost = *((uint*)(dv->readBuff) + readBufferP + 1);   //second 4 bytes
-            originalCost = dv->rTable.at(addr).cost;
             cout << "IP: " << DV::uintToIP(addr) << ", cost: " << cost << endl;
-            if (originalCost < cost + distance)
+            RouteTableEntry& p = dv->rTable[addr];
+            originalCost = p.cost;
+            if (originalCost <= cost + distance)
             {
-                dv->rTable.at(addr).ttl = dv->ttl;
-                dv->rTable.at(addr).cost = cost + distance;
-                dv->rTable.at(addr).next = sendHost;
-                changeFlag = true;
+                p.ttl = dv->ttl;
+                p.next = sendHost;
+                if (originalCost < cost + distance) {
+                    p.cost = cost + distance;
+                    changeFlag = true;
+                }
             }
             readBufferP += 2;
         }
@@ -73,13 +76,10 @@ void Changer::updateChange()
         if (changeFlag) {
             // read routing table into send buffer then send
             uint *tm = (uint*) dv->sendBuff;
-//            printf("update rTable by changing:\n");
             for (auto& p : dv->rTable) {
                 *tm++ = p.first;
                 *tm++ = p.second.cost;
-//                printf("next: %s\t cost:%u\t TTL:%u\t\n",dv->uintToIP(p.second.next),p.second.cost,p.second.ttl);
-	    }
-//            printf("rTable updating ends\n");
+            }
             dv->usock->write();
         }
         cout << "=========================INCOMING PACKET ENDS=======================\n" << endl;
