@@ -96,9 +96,11 @@ void Changer::periodicChange() {
         uint *tm = (uint*) dv->sendBuff;
         for(auto it = dv->rTable.begin(); it != dv->rTable.end(); it++) {
             if (it->second.cost != 0) {
-                if ((it->second.ttl -= dv->period) <= 0) {
-                    // node is dead, set cost to infinity
+                if (it->second.ttl <= dv->period) {
+                    it->second.ttl = 0;
                     it->second.cost = dv->ifinity;
+                } else {
+                    it->second.ttl -= dv->period;
                 }
             }
             *tm++ = it->first;
