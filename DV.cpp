@@ -37,6 +37,20 @@ void DV::init(string config, string port, string TTL, string infinity, string pr
         printf("config file not found\n");
         exit(1);
     }
+    
+    memset(address, 0, 20);
+    memset(cost, 0, 4);
+    
+    fscanf(fp, "%s %s\n", address, cost);
+    RouteTableEntry tm;
+    tm.cost = 0;
+    tm.next = inet_addr(address);
+    tm.ttl = ttl;
+    rTable.insert({ tm.next, tm });
+    
+    memset(address, 0, 20);
+    memset(cost, 0, 4);
+    
     //for each line, addr is the address and cost
     while (fscanf(fp, "%s %s\n", address, cost) != EOF)
     {
@@ -44,6 +58,7 @@ void DV::init(string config, string port, string TTL, string infinity, string pr
         RouteTableEntry line;
         
         line.ttl = stoi(TTL);
+        cout << "Reading config file: " << endl;
         if (cost[0] == 'y')
         {
             addr tm;
@@ -64,12 +79,15 @@ void DV::init(string config, string port, string TTL, string infinity, string pr
             line.cost = this->ifinity;
             line.next = 0;        // 0 for NULL next router
         }
+        cout << "IP: " << DV::uintToIP(dest) << ", cost: " << line.next << endl;
+
+        
         rTable.insert({ dest, line });
         memset(address, 0, 20);
         memset(cost, 0, 4);
     }
-    // add local ip and set total size
-    //    tTable.insert({})
+    
+    this->vs = (uint) rTable.size();
 
     buffLen = 8 * this->vs; // each vertex in the network will need 8 byte to communicate infos
 }
