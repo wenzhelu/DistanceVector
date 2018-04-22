@@ -1,8 +1,15 @@
 #pragma once
 
+#ifndef CHANGER_H
+#define CHANGER_H
+
+#include "DV.h"
+
 class Changer
 {
 public:
-	static void updateChange();
-	static void periodicChange();
+	void updateChange();
+	void periodicChange();
 };
+
+#endif
